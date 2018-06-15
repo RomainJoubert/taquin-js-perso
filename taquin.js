@@ -6,6 +6,12 @@ let tab = [
     [9, 10, 11, 12],
     [13, 14, 15, " "]
 ];
+let refTab = [
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9, 10, 11, 12],
+    [13, 14, 15, " "]
+];
 
 
 function draw() {
@@ -73,6 +79,7 @@ function permute(i, j) {
 
         // console.log("empty " + fullCase);
         draw();
+        youWin();
     }
 }
 
@@ -96,7 +103,7 @@ function mixWithPermute(i, j) {
             else if (tirage == 3 && cellPermutable(i - 1, j)) {
                 permute(i - 1, j);
             }
-    }
+    };
 
 
 
@@ -121,6 +128,17 @@ function mix(tab){
         }
     }
     draw();
+};
+
+function youWin() {
+    for(i = 0; i < tab.length; i++) {
+        for(j = 0 ; j < tab.length; j ++) {
+            if (tab[i][j] !== refTab[i][j]) {
+                return false;
+            }
+        }
+    }
+    alert("Vous avez gagné !");
 };
 
 
