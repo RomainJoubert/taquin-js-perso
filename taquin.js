@@ -1,5 +1,4 @@
 let taille = 4;
-
 let tab = [
     [1, 2, 3, 4],
     [5, 6, 7, 8],
@@ -13,7 +12,6 @@ let refTab = [
     [13, 14, 15, " "]
 ];
 
-
 function draw() {
     for (let i = 0; i < tab.length; i++) {
         for (let j = 0; j < tab.length; j++) {
@@ -25,6 +23,7 @@ function draw() {
 
 //recherche les coordonnées x,y de la case vide
 function emptyPosition() {
+
     for (let i = 0; i < tab.length; i++) {
         for (let j = 0; j < tab.length; j++) {
             if (tab[i][j] === " ") {
@@ -73,13 +72,13 @@ function permute(i, j) {
     if (casePerm === true) {
         //récupére la valeur de la cellule vide
         let newEmptyCase = tab[emptyCase.i][emptyCase.j];
-        let fullCase = tab[i][j];
+        tab[emptyCase.i][emptyCase.j] = tab[i][j];
         tab[i][j] = newEmptyCase;
-        tab[emptyCase.i][emptyCase.j] = fullCase;
+
 
         // console.log("empty " + fullCase);
         draw();
-        youWin();
+        // youWin();
     }
 }
 
@@ -89,26 +88,26 @@ function getRandom(min, max) {
 
 function mixWithPermute(i, j) {
 
-        let tirage = getRandom(0, 4);
-        console.log("t " + tirage);
-            if (tirage == 0 && cellPermutable(i, j - 1)) {
-                permute(i, j - 1);
-            }
-            else if (tirage == 1 && cellPermutable(i, j + 1)) {
-                permute(i, j + 1);
-            }
-            else if (tirage == 2 && cellPermutable(i + 1, j)) {
-                permute(i + 1, j);
-            }
-            else if (tirage == 3 && cellPermutable(i - 1, j)) {
-                permute(i - 1, j);
-            }
-    };
-
+    let tirage = getRandom(0, 4);
+    console.log("t " + tirage);
+    if (tirage == 0 && cellPermutable(i, j - 1)) {
+        permute(i, j - 1);
+    }
+    else if (tirage == 1 && cellPermutable(i, j + 1)) {
+        permute(i, j + 1);
+    }
+    else if (tirage == 2 && cellPermutable(i + 1, j)) {
+        permute(i + 1, j);
+    }
+    else if (tirage == 3 && cellPermutable(i - 1, j)) {
+        permute(i - 1, j);
+    }
+};
 
 
 // function pour faire un mélange aléatoire
-function mix(tab){
+function mix(tab) {
+
     let simpleArray = [];
     for (let i = 0; i < tab.length; i++) {
         for (let j = 0; j < tab.length; j++) {
@@ -131,8 +130,8 @@ function mix(tab){
 };
 
 function youWin() {
-    for(i = 0; i < tab.length; i++) {
-        for(j = 0 ; j < tab.length; j ++) {
+    for (i = 0; i < tab.length; i++) {
+        for (j = 0; j < tab.length; j++) {
             if (tab[i][j] !== refTab[i][j]) {
                 return false;
             }
@@ -141,33 +140,115 @@ function youWin() {
     alert("Vous avez gagné !");
 };
 
+//fonction qui vérifie la parité de la case vide
+function parityV() {
+    let caseVide = emptyPosition();
+    let sum = caseVide.i + caseVide.j;
+    let par;
+    if (sum % 2 === 0) {
+        par = "pair";
+    } else {
+        par = "impair";
+    }
+    return par;
+}
+
+//fonction qui vérifie la parité des permutations
+function countPermutation(tableau) {
+    let simpleArray = [];
+    let tmp;
+    let compteur = 0;
+    let par;
+    for (let i = 0; i < tableau.length; i++) {
+        for (let j = 0; j < tableau.length; j++) {
+            simpleArray.push(tableau[i][j]);
+        }
+    }
+    for(let i = 0; i < simpleArray.length; i++) {
+        if (simpleArray[i] === " ") {
+            simpleArray[i] = 16;
+        }
+    }
+
+        for (let i = 0; i < simpleArray.length; i++) {
+        let k = i;
+        for (let j = i + 1; j < simpleArray.length; j++) {
+            if (simpleArray[j] < simpleArray[k]) {
+                k = j;
+            }
+        }
+        console.log(simpleArray);
+
+        if (k !== i) {
+            tmp = simpleArray[k];
+            simpleArray[k] = simpleArray[i];
+            simpleArray[i] = tmp;
+            compteur++;
+        }
+    }
+
+    if (compteur % 2 === 0) {
+        par = "pair";
+    } else {
+        par = "impair"
+    }
+    return par;
+}
+
+//fonction qui vérifie si la partie est gagnable
+function winnable() {
+    let pV = parityV();
+    let pT = countPermutation(tab);
+    console.log(pV);
+    console.log(pT);
+    if (pV === pT) {
+        alert("Le jeu est résolvable");
+        console.log("ok");
+    } else {
+        alert("Le jeu n'est pas résolvable");
+        console.log("pas ok");
+
+    }
+}
+
 
 $(document).ready(function () {
+    $("#parity").hide(function () {
     $("#reinitialize").on('click', function () {
         $("#reinitialize").off('click');
+
         for (let i = 0; i < tab.length; i++) {
             $("table").append("<tr class='row" + i + "'></tr>");
             for (let j = 0; j < tab.length; j++) {
                 $(".row" + i).append("<td id='c" + tab[i][j] + "' class='cas" + j + "'>" + tab[i][j] + "</td>");
                 $('.row' + i + ' .cas' + j).click(function () {
                     permute(i, j);
-
+                    youWin();
                 })
             }
-
         }
-
+    })
     });
     $("#mix").click(function () {
         for (let a = 0; a < 100; a++) {
             let emptyCase = emptyPosition();
             mixWithPermute(emptyCase.i, emptyCase.j);
         }
+        $("#reinitialize").hide();
+        $("#parity").show();
     });
 
     $("#aleatoire").click(function () {
         mix(tab);
+        $("#parity").show();
     });
+    $("#parity").click(function () {
+        winnable();
+        $("#parity").hide();
+    });
+    $("#game").click(function () {
+        draw();
+    })
 
 });
 
