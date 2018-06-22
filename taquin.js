@@ -16,21 +16,25 @@ function draw() {
     for (let i = 0; i < tab.length; i++) {
         for (let j = 0; j < tab.length; j++) {
             $('.row' + i + ' .cas' + j).html(tab[i][j]);
-
+            emptyPosition();
         }
     }
 }
 
 //recherche les coordonnées x,y de la case vide
 function emptyPosition() {
-
+    let position;
     for (let i = 0; i < tab.length; i++) {
         for (let j = 0; j < tab.length; j++) {
             if (tab[i][j] === " ") {
-                return {"i": i, "j": j};
+                $('.row' + i + ' .cas' + j).addClass("emptyCell");
+                position = {"i": i, "j": j};
+            } else {
+                $('.row' + i + ' .cas' + j).removeClass("emptyCell");
             }
         }
     }
+    return position;
 }
 
 //vérifie que la cellule voisine est vide
@@ -164,13 +168,13 @@ function countPermutation(tableau) {
             simpleArray.push(tableau[i][j]);
         }
     }
-    for(let i = 0; i < simpleArray.length; i++) {
+    for (let i = 0; i < simpleArray.length; i++) {
         if (simpleArray[i] === " ") {
             simpleArray[i] = 16;
         }
     }
 
-        for (let i = 0; i < simpleArray.length; i++) {
+    for (let i = 0; i < simpleArray.length; i++) {
         let k = i;
         for (let j = i + 1; j < simpleArray.length; j++) {
             if (simpleArray[j] < simpleArray[k]) {
@@ -202,34 +206,60 @@ function winnable() {
     console.log(pV);
     console.log(pT);
     if (pV === pT) {
-        alert("Le jeu est résolvable");
-        console.log("ok");
+        $("#parite").html("<div class='alert alert-success'>Le jeu est résolvable</div>");
     } else {
-        alert("Le jeu n'est pas résolvable");
-        console.log("pas ok");
+        $("#parite").html("<div class='alert alert-success'>Le jeu n'est pas résolvable</div>");
 
     }
 }
 
 
 $(document).ready(function () {
-    $("#parity").hide(function () {
+    $("#parity").hide();
     $("#reinitialize").on('click', function () {
-        $("#reinitialize").off('click');
+        $("#reinitialize").hide();
+        $("#pret").hide();
 
         for (let i = 0; i < tab.length; i++) {
             $("table").append("<tr class='row" + i + "'></tr>");
             for (let j = 0; j < tab.length; j++) {
                 $(".row" + i).append("<td id='c" + tab[i][j] + "' class='cas" + j + "'>" + tab[i][j] + "</td>");
+                emptyPosition();
                 $('.row' + i + ' .cas' + j).click(function () {
+                    $("#parite").empty();
                     permute(i, j);
                     youWin();
                 })
             }
         }
-    })
     });
+    $("#reinitialize").mouseenter(function(){
+        $("#curseur").css("visibility", "visible")})
+        .mouseleave(function(){
+        $("#curseur").css("visibility", "hidden");
+        });
+
+    $("#mix").mouseenter(function(){
+        $("#curseur2").css("visibility", "visible")})
+        .mouseleave(function(){
+            $("#curseur2").css("visibility", "hidden");
+        });
+
+    $("#aleatoire").mouseenter(function(){
+        $("#curseur3").css("visibility", "visible")})
+        .mouseleave(function(){
+            $("#curseur3").css("visibility", "hidden");
+        });
+
+    $("#parity").mouseenter(function(){
+        $("#curseur4").css("visibility", "visible")})
+        .mouseleave(function(){
+            $("#curseur4").css("visibility", "hidden");
+        });
+
+
     $("#mix").click(function () {
+        $("#parite").empty();
         for (let a = 0; a < 100; a++) {
             let emptyCase = emptyPosition();
             mixWithPermute(emptyCase.i, emptyCase.j);
@@ -241,6 +271,7 @@ $(document).ready(function () {
     $("#aleatoire").click(function () {
         mix(tab);
         $("#parity").show();
+        $("#parite").empty();
     });
     $("#parity").click(function () {
         winnable();

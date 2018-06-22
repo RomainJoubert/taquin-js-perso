@@ -14,19 +14,28 @@
     <div class="container">
         <h1>Le Taquin Taquin</h1>
         <h2>Le jeu pour expérimenter l'algo</h2>
-
+        <br>
+        <div id="btn">
+            <button id="reinitialize" type="button" class="btn">Grille</button>
+            <div id="curseur" class="infobulle">Affiche la grille initiale du jeu</div>
+            <button id="mix" type="button" class="btn">Mélanger</button>
+            <div id="curseur2" class="infobulle">Tu peux toujours gagner avec ce mélange !</div>
+            <button id="aleatoire" type="button" class="btn">Mélange aléatoire</button>
+            <div id="curseur3" class="infobulle">Tu as une chance sur deux de gagner !</div>
+        </div>
+        <br>
     </div>
 </div>
+<div class="container-fluid" id="parite"></div>
 <div class="container-fluid">
     <table id="table">
+        <td id="pret">Prêt(e) pour une partie de taquin ?</td>
     </table>
 </div>
 <div class="container-fluid footer">
-    <button id="reinitialize" type="button" class="btn btn-danger">Afficher le jeu</button>
-    <button id="mix" type="button" class="btn btn-success">Mélanger</button>
-    <button id="aleatoire" type="button" class="btn btn-success">Mélange aléatoire</button>
     <button id="parity" type="button" class="btn btn-danger">Test parité</button>
-    <button id="game" type="button" class="btn btn-info">Nouvelle partie ?</button>
+    <div id="curseur4" class="infobulle2">Clique si tu veux savoir si la partie peut être gagnée !</div>
+    <!--<button id="game" type="button" class="btn btn-info">Nouvelle partie ?</button>-->
 </div>
 </body>
 </html>
